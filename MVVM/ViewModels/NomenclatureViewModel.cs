@@ -15,6 +15,7 @@ namespace MVVM.ViewModels
             set
             {
                 item = value;
+                ItemSelected = value != null;
                 OnPropertyChanged("Item");
             }
         }
@@ -27,11 +28,20 @@ namespace MVVM.ViewModels
                 new Models.NomenclatureItem {Name="Плацебо",Description="Помогает. Если в него веришь. Но это не точно."}
             };
         }
-
+        private bool itemSelected;
+        public bool ItemSelected
+        {
+            get { return itemSelected; }
+            set
+            {
+                itemSelected = value;
+                OnPropertyChanged("ItemSelected");
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
+        }   
     }
 }

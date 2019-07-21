@@ -5,21 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVM.Views"
         mc:Ignorable="d"
-        Title="Storage" Height="450" Width="800">
+        Title="Номенклатура" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
-        <ListBox Grid.Column="0" ItemsSource="{Binding Nomenclature}" SelectedItem="{Binding Item}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.1*"/>
+        </Grid.RowDefinitions>
+        <ListBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Nomenclature}" SelectedItem="{Binding Item}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=Name}"/>
+                        <TextBlock FontSize="18" FontWeight="Bold" Text="{Binding Path=Name}"/>
                         <TextBlock Text="{Binding Path=Description}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <StackPanel Grid.Column="1">
+            <StackPanel Grid.Column="1" DataContext="{Binding Item}">
+                <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
+                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="16"/>
+            </StackPanel>
+            <Button FontSize="20" Background="LightYellow" Visibility="{Binding ItemSelected, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}">Изменить</Button>
+            <Button FontSize="20" Background="LightPink" Visibility="{Binding ItemSelected, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}">Удалить</Button>
+        </StackPanel>
+        
+        <Button Grid.Column="0" Grid.Row="1" Background="LightGreen" FontSize="20" Visibility="{Binding ItemSelected, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}">Выбрать</Button>
+        <Button Grid.Column="1" Grid.Row="1" Background="LightBlue" FontSize="20">Добавить</Button>
     </Grid>
 </Window>
