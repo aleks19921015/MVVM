@@ -19,8 +19,9 @@ namespace MVVM.Views
     /// </summary>
     public partial class NomenclatureItemView : Window
     {
-        public NomenclatureItemView()
+        public NomenclatureItemView(Models.NomenclatureItem editedItem)
         {
+            DataContext = new ViewModels.NomenclatureItemViewModel(editedItem);
             InitializeComponent();
         }
     }

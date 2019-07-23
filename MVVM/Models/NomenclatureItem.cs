@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace MVVM.Models
 {
-    class NomenclatureItem: INotifyPropertyChanged
+    public class NomenclatureItem: INotifyPropertyChanged
     {
         private string name;
         private string description;
@@ -36,6 +36,11 @@ namespace MVVM.Models
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+        public void Clone(NomenclatureItem item)
+        {
+            item.Name = name;
+            item.Description = description;
         }
     }
 }

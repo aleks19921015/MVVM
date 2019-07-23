@@ -14,7 +14,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button Grid.Row="0" Grid.Column="0" FontSize="24" Command="{Binding OpenNomenclatureWindow}">Номенклатура</Button>
+        <Button Grid.Row="0" Grid.Column="0" FontSize="24" Command="{Binding OpenNomenclatureWindowCommand}">Номенклатура</Button>
         <Button Grid.Row="0" Grid.Column="1" FontSize="24">Склад</Button>
     </Grid>
 </Window>

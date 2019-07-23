@@ -5,18 +5,19 @@ namespace MVVM.ViewModels
 {
     public class MainViewModel
     {
-        private Models.RelayCommand openNomenclatureWindow;
-        public Models.RelayCommand OpenNomenclatureWindow
+        private Models.RelayCommand openNomenclatureWindowCommand;
+        public Models.RelayCommand OpenNomenclatureWindowCommand
         {
             get
             {
-                return openNomenclatureWindow ??
-                    (openNomenclatureWindow = new Models.RelayCommand((o) =>
-                    {
-                        Views.NomenclatureWindow nomenclatureWindow = new Views.NomenclatureWindow();
-                        nomenclatureWindow.ShowDialog();
-                    }));
+                return openNomenclatureWindowCommand ??
+                    (openNomenclatureWindowCommand = new Models.RelayCommand(o=>OpenNomenclatureWindow()));
             }
+        }
+        private void OpenNomenclatureWindow()
+        {
+            Views.NomenclatureWindow nomenclatureWindow = new Views.NomenclatureWindow();
+            nomenclatureWindow.ShowDialog();
         }
     }
 }

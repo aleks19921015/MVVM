@@ -71,6 +71,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\NomenclatureItem.cs" />
+    <Compile Include="ViewModels\NomenclatureItemViewModel.cs" />
     <Compile Include="ViewModels\NomenclatureViewModel.cs" />
     <Compile Include="Views\NomenclatureItemView.xaml.cs">
       <DependentUpon>NomenclatureItemView.xaml</DependentUpon>
