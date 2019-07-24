@@ -15,35 +15,36 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="0.1*"/>
         </Grid.RowDefinitions>
-        <ListBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Nomenclature}" SelectedItem="{Binding Item}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock FontSize="18" FontWeight="Bold" Text="{Binding Path=Name}"/>
-                        <TextBlock Text="{Binding Path=Description}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <StackPanel Grid.Column="1">
-            <StackPanel Grid.Column="1" DataContext="{Binding Item}">
+        <DockPanel>
+            <TextBox DockPanel.Dock="Top" FontSize="18" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}" />
+            <ListBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding FilteredNomenclature}" SelectedItem="{Binding Item}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock FontSize="18" FontWeight="Bold" Text="{Binding Path=Name}"/>
+                            <TextBlock Text="{Binding Path=Description}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+        <DockPanel Grid.Column="1">
+            <Button DockPanel.Dock="Bottom" FontSize="20" Background="LightYellow" Command="{Binding EditItemCommand}">
+                Изменить
+            </Button>
+            <Button DockPanel.Dock="Bottom" FontSize="20" Background="LightPink" Command="{Binding DeleteItemCommand}">
+                Удалить
+            </Button>
+            <StackPanel DockPanel.Dock="Top" Grid.Column="1" DataContext="{Binding Item}">
                 <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
                 <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="16"/>
             </StackPanel>
-            <Button FontSize="20" Background="LightYellow" Command="{Binding EditItemCommand}" 
-                    Visibility="{Binding ItemSelected, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}">
-                Изменить
-            </Button>
-            <Button FontSize="20" Background="LightPink" 
-                    Visibility="{Binding ItemSelected, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}">
-                Удалить
-            </Button>
-        </StackPanel>
+        </DockPanel>
         
         <Button Grid.Column="0" Grid.Row="1" Background="LightGreen" FontSize="20"
                 Visibility="{Binding ItemSelected, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}">
             Выбрать
         </Button>
-        <Button Grid.Column="1" Grid.Row="1" Background="LightBlue" FontSize="20">Добавить</Button>
+        <Button Grid.Column="1" Grid.Row="1" Background="LightBlue" Command="{Binding AddItemCommand}" FontSize="20">Добавить</Button>
     </Grid>
 </Window>

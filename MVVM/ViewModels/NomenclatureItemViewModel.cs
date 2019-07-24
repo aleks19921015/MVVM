@@ -26,14 +26,15 @@ namespace MVVM.ViewModels
         {
             get
             {
-                return saveItemCommand ?? (saveItemCommand = new Models.RelayCommand(o => SaveItem(o)));
+                return saveItemCommand ?? (saveItemCommand = new Models.RelayCommand(o => SaveItem(o),
+                    o => (Item.Name ?? "") != ""));
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
         //Конструктор
-        public NomenclatureItemViewModel(Models.NomenclatureItem editedItem)
+        public NomenclatureItemViewModel(Models.NomenclatureItem passedItem)
         {
-            Item = editedItem;
+            Item = passedItem;
         }
         //Функции
         public void OnPropertyChanged([CallerMemberName]string prop = "")

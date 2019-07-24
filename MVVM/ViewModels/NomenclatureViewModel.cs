@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
+using System.Windows.Data;
 
 namespace MVVM.ViewModels
 {
@@ -14,21 +15,12 @@ namespace MVVM.ViewModels
             set
             {
                 item = value;
-                ItemSelected = value != null;
                 OnPropertyChanged("Item");
             }
         }
-        public ObservableCollection<Models.NomenclatureItem> Nomenclature { get; set; }
-        private bool itemSelected;
-        public bool ItemSelected
-        {
-            get { return itemSelected; }
-            set
-            {
-                itemSelected = value;
-                OnPropertyChanged("ItemSelected");
-            }
-        }
+        public ObservableCollection<Models.NomenclatureItem> Nomenclature;
+        public ICollectionView FilteredNomenclature
+        { get { return CollectionViewSource.GetDefaultView(Nomenclature); } }
         public event PropertyChangedEventHandler PropertyChanged;
         private Models.RelayCommand editItemCommand;
         public Models.RelayCommand EditItemCommand
@@ -36,7 +28,38 @@ namespace MVVM.ViewModels
             get
             {
                 return editItemCommand ?? 
-                    (editItemCommand = new Models.RelayCommand(o=>EditItem()));
+                    (editItemCommand = new Models.RelayCommand(o=>EditItem(),o => Item != null));
+            }
+        }
+        private Models.RelayCommand addItemCommand;
+        public Models.RelayCommand AddItemCommand
+        {
+            get
+            {
+                return addItemCommand ??
+                    (addItemCommand = new Models.RelayCommand(o => AddItem()));
+            }
+        }
+        private Models.RelayCommand deleteItemCommand;
+        public Models.RelayCommand DeleteItemCommand
+        {
+            get
+            {
+                return deleteItemCommand ??
+                    (deleteItemCommand = new Models.RelayCommand(o => DeleteItem(), o => Item != null));
+            }
+        }
+        private string filterString;
+        public string FilterString
+        {
+            get { return filterString; }
+            set
+            {
+                filterString = value;
+                OnPropertyChanged("Item");
+                FilteredNomenclature.Refresh();
+                FilteredNomenclature.MoveCurrentToFirst();
+                Item = FilteredNomenclature.CurrentItem as Models.NomenclatureItem;
             }
         }
         //Конструктор
@@ -47,12 +70,18 @@ namespace MVVM.ViewModels
                 new Models.NomenclatureItem {Name="Панацея",Description="Таблетки от всего" },
                 new Models.NomenclatureItem {Name="Плацебо",Description="Помогает. Если в него веришь. Но это не точно."}
             };
+            FilteredNomenclature.Filter = item => FilterItem(item as Models.NomenclatureItem);
+            Item = Nomenclature[0];
         }
         //Функции
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }   
+        private bool FilterItem(Models.NomenclatureItem itemToFilter)
+        {
+            return FilterString == null || itemToFilter.Name.ToUpper().Contains(FilterString.ToUpper());
+        }
         private void EditItem()
         {
             Models.NomenclatureItem editedItem = new Models.NomenclatureItem();
@@ -60,6 +89,18 @@ namespace MVVM.ViewModels
             Views.NomenclatureItemView dialogWindow = new Views.NomenclatureItemView(editedItem);
             if (dialogWindow.ShowDialog() == true)
                 editedItem.Clone(Item);
+        }
+        private void AddItem()
+        {
+            Models.NomenclatureItem newItem = new Models.NomenclatureItem();
+            Views.NomenclatureItemView dialogWindow = new Views.NomenclatureItemView(newItem);
+            if (dialogWindow.ShowDialog() == true)
+                Nomenclature.Insert(0,newItem);
+        }
+        private void DeleteItem()
+        {
+            Nomenclature.Remove(Item);
+            Item = FilteredNomenclature.CurrentItem as Models.NomenclatureItem;
         }
     }
 }
