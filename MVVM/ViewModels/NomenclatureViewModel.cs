@@ -8,6 +8,20 @@ namespace MVVM.ViewModels
     class NomenclatureViewModel : INotifyPropertyChanged
     {
         //Поля
+        private ObservableCollection<Models.Category> Categories { get; set; }
+        private Models.Category selectedCategory;
+        public Models.Category SelectedCategory
+        {
+            get { return selectedCategory; }
+            set
+            {
+                selectedCategory = value;
+                OnPropertyChanged("SelectedCategory");
+            }
+        }
+        public ObservableCollection<Models.NomenclatureItem> Nomenclature;
+        public ICollectionView FilteredNomenclature
+        { get { return CollectionViewSource.GetDefaultView(Nomenclature); } }
         private Models.NomenclatureItem item;
         public Models.NomenclatureItem Item
         {
@@ -18,10 +32,22 @@ namespace MVVM.ViewModels
                 OnPropertyChanged("Item");
             }
         }
-        public ObservableCollection<Models.NomenclatureItem> Nomenclature;
-        public ICollectionView FilteredNomenclature
-        { get { return CollectionViewSource.GetDefaultView(Nomenclature); } }
+        private string filterString;
+        public string FilterString
+        {
+            get { return filterString; }
+            set
+            {
+                filterString = value;
+                OnPropertyChanged("Item");
+                FilteredNomenclature.Refresh();
+                FilteredNomenclature.MoveCurrentToFirst();
+                Item = FilteredNomenclature.CurrentItem as Models.NomenclatureItem;
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        //Команды
         private Models.RelayCommand editItemCommand;
         public Models.RelayCommand EditItemCommand
         {
@@ -49,22 +75,15 @@ namespace MVVM.ViewModels
                     (deleteItemCommand = new Models.RelayCommand(o => DeleteItem(), o => Item != null));
             }
         }
-        private string filterString;
-        public string FilterString
-        {
-            get { return filterString; }
-            set
-            {
-                filterString = value;
-                OnPropertyChanged("Item");
-                FilteredNomenclature.Refresh();
-                FilteredNomenclature.MoveCurrentToFirst();
-                Item = FilteredNomenclature.CurrentItem as Models.NomenclatureItem;
-            }
-        }
+
         //Конструктор
         public NomenclatureViewModel()
         {
+            Categories = new ObservableCollection<Models.Category>
+            {
+                new Models.Category("Таблетки"),
+                new Models.Category("Мази")
+            };
             Nomenclature = new ObservableCollection<Models.NomenclatureItem>
             {
                 new Models.NomenclatureItem {Name="Панацея",Description="Таблетки от всего" },
@@ -73,6 +92,7 @@ namespace MVVM.ViewModels
             FilteredNomenclature.Filter = item => FilterItem(item as Models.NomenclatureItem);
             Item = Nomenclature[0];
         }
+
         //Функции
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {

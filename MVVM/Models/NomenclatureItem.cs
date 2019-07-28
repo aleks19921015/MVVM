@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace MVVM.Models
 {
     public class NomenclatureItem: INotifyPropertyChanged
     {
+        //Поля
         private string name;
         private string description;
 
@@ -33,6 +31,7 @@ namespace MVVM.Models
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        //Функции
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

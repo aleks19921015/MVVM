@@ -8,16 +8,23 @@
         Title="Номенклатура" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.25*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="0.5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel>
+        <TreeView ItemsSource="{Binding Categories}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Childs}">
+                    <TextBlock Text="{Binding Path=Name}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <DockPanel  Grid.Column="1">
             <TextBox DockPanel.Dock="Top" FontSize="18" Text="{Binding FilterString, UpdateSourceTrigger=PropertyChanged}" />
-            <ListBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding FilteredNomenclature}" SelectedItem="{Binding Item}">
+            <ListBox ItemsSource="{Binding FilteredNomenclature}" SelectedItem="{Binding Item}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="5">
@@ -28,23 +35,25 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </DockPanel>
-        <DockPanel Grid.Column="1">
-            <Button DockPanel.Dock="Bottom" FontSize="20" Background="LightYellow" Command="{Binding EditItemCommand}">
-                Изменить
-            </Button>
+        <DockPanel Grid.Column="2">
             <Button DockPanel.Dock="Bottom" FontSize="20" Background="LightPink" Command="{Binding DeleteItemCommand}">
                 Удалить
+            </Button>
+            <Button DockPanel.Dock="Bottom" Grid.Row="1" Background="LightBlue" Command="{Binding AddItemCommand}" FontSize="20">
+                Добавить
+            </Button>
+            <Button DockPanel.Dock="Bottom" FontSize="20" Background="LightYellow" Command="{Binding EditItemCommand}">
+                Изменить
             </Button>
             <StackPanel DockPanel.Dock="Top" Grid.Column="1" DataContext="{Binding Item}">
                 <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" FontStyle="Italic"/>
                 <TextBlock Text="{Binding Description}" TextWrapping="Wrap" FontSize="16"/>
             </StackPanel>
         </DockPanel>
-        
+
         <Button Grid.Column="0" Grid.Row="1" Background="LightGreen" FontSize="20"
                 Visibility="{Binding ItemSelected, Converter={StaticResource BoolToVis}, FallbackValue=Hidden}">
             Выбрать
         </Button>
-        <Button Grid.Column="1" Grid.Row="1" Background="LightBlue" Command="{Binding AddItemCommand}" FontSize="20">Добавить</Button>
     </Grid>
 </Window>
